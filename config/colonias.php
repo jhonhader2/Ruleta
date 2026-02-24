@@ -1,7 +1,13 @@
 <?php
 /**
  * Fuente única de verdad para colonias.
- * Mantener sincronizado: index.html genera leyenda desde estas colonias.
+ * Cada colonia: nombre (display) y slug (clase CSS).
  */
 
-return ['Andina', 'Amazónica', 'Caribe', 'Pacífico', 'Orinoquía'];
+return [
+    ['nombre' => 'Andina', 'slug' => 'andina'],
+    ['nombre' => 'Amazónica', 'slug' => 'amazonica'],
+    ['nombre' => 'Caribe', 'slug' => 'caribe'],
+    ['nombre' => 'Pacífico', 'slug' => 'pacifico'],
+    ['nombre' => 'Orinoquía', 'slug' => 'orinoquia'],
+];

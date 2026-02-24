@@ -1,3 +1,11 @@
+DirectoryIndex index.php
+
+# Favicon: redirigir favicon.ico a favicon.svg (evita 404)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^favicon\.ico$ favicon.svg [L]
+</IfModule>
+
 # Redirección HTTPS en producción (configurar APP_ENV en vhost si aplica)
 <IfModule mod_rewrite.c>
   RewriteEngine On

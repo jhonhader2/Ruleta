@@ -1,4 +1,5 @@
 /* Ruleta de Colonias Colombianas - Estilos */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
 :root {
   --color-andina: #2d5a27;
@@ -31,9 +32,6 @@ body {
   justify-content: center;
   padding: 1.5rem;
 }
-
-/* Fuente alternativa si DM Sans no carga */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 
 .container {
   width: 100%;
@@ -279,25 +277,6 @@ body {
   border-top: 16px solid var(--color-accent);
   z-index: 2;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.asignacion-mensaje {
-  text-align: center;
-  font-size: 1.125rem;
-  font-weight: 600;
-  padding: 1rem;
-  border-radius: var(--radius);
-  background: var(--color-surface);
-}
-
-.asignacion-mensaje.exito {
-  color: #86efac;
-  background: rgba(34, 197, 94, 0.15);
-}
-
-.asignacion-mensaje.error {
-  color: #fca5a5;
-  background: rgba(239, 68, 68, 0.15);
 }
 
 .footer {

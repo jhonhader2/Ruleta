@@ -15,7 +15,6 @@ const btnAsignar = document.getElementById('btnAsignar');
 const resultado = document.getElementById('resultado');
 const ruletaContainer = document.getElementById('ruletaContainer');
 const ruletaWheel = document.getElementById('ruletaWheel');
-const asignacionMensaje = document.getElementById('asignacionMensaje');
 
 form.addEventListener('submit', manejarEnvio);
 
@@ -44,8 +43,6 @@ async function manejarEnvio(e) {
   }
 
   setLoading(true);
-  asignacionMensaje.textContent = '';
-  asignacionMensaje.className = 'asignacion-mensaje';
 
   try {
     const res = await fetch('api/asignar.php', {
@@ -81,23 +78,31 @@ function setLoading(loading) {
 }
 
 function mostrarResultado(mensaje) {
-  asignacionMensaje.textContent = mensaje;
-  asignacionMensaje.className = 'asignacion-mensaje exito';
+  Swal.fire({
+    icon: 'success',
+    title: '¡Colonia asignada!',
+    text: mensaje,
+    confirmButtonColor: '#f59e0b'
+  });
 }
 
 /** Procesa asignación: mensaje + ruleta o leyenda (DRY). */
 function procesarAsignacion(colonia, yaAsignado, mensaje) {
-  mostrarResultado(mensaje);
   if (yaAsignado) {
+    mostrarResultado(mensaje);
     mostrarColoniaAsignada(colonia);
   } else {
-    animarRuleta(colonia);
+    animarRuleta(colonia, mensaje);
   }
 }
 
 function mostrarError(mensaje) {
-  asignacionMensaje.textContent = mensaje;
-  asignacionMensaje.className = 'asignacion-mensaje error';
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: mensaje,
+    confirmButtonColor: '#f59e0b'
+  });
 }
 
 /** Resalta el ganador en la leyenda (DRY: usado en asignada y tras girar). */
@@ -116,21 +121,18 @@ function mostrarColoniaAsignada(colonia) {
 
 /**
  * Animación de la ruleta: rota hasta el segmento asignado.
- * El marcador está arriba (12h), el segmento 0 (Andina) comienza ahí.
+ * Mensaje y resaltado se muestran al terminar de girar.
  */
-function animarRuleta(coloniaGanadora) {
+function animarRuleta(coloniaGanadora, mensaje) {
   ruletaContainer.classList.add('visible');
   ruletaContainer.classList.remove('solo-leyenda');
   ruletaContainer.setAttribute('aria-hidden', 'false');
 
-  // Quitar resaltado previo
   document.querySelectorAll('.ruleta-leyenda-item').forEach(el => el.classList.remove('ganador'));
 
   const idx = COLONIAS.indexOf(coloniaGanadora);
   if (idx === -1) return;
 
-  // Rotación para que el segmento ganador quede bajo el marcador.
-  // El marcador apunta arriba; cada segmento tiene 72°; el centro del segmento 0 está a 36°.
   const anguloGanador = 360 - (idx * ANGULO_POR_SEGMENTO + ANGULO_POR_SEGMENTO / 2);
   const vueltas = 6 * 360;
   const rotacionFinal = vueltas + anguloGanador;
@@ -138,11 +140,12 @@ function animarRuleta(coloniaGanadora) {
   ruletaWheel.classList.remove('spinning');
   ruletaWheel.style.transform = `rotate(0deg)`;
 
-  const resaltarGanador = () => {
+  const alTerminar = () => {
     resaltarGanadorEnLeyenda(coloniaGanadora);
-    ruletaWheel.removeEventListener('transitionend', resaltarGanador);
+    mostrarResultado(mensaje);
+    ruletaWheel.removeEventListener('transitionend', alTerminar);
   };
-  ruletaWheel.addEventListener('transitionend', resaltarGanador);
+  ruletaWheel.addEventListener('transitionend', alTerminar);
 
   requestAnimationFrame(() => {
     ruletaWheel.classList.add('spinning');

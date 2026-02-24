@@ -1,11 +1,10 @@
 <?php
 /**
  * Punto de entrada principal.
- * Inyecta COLONIAS desde config para mantener DRY con el backend.
+ * Colonias desde config/colonias.php (fuente única).
  */
-$colonias = file_exists(__DIR__ . '/config/colonias.php')
-  ? require __DIR__ . '/config/colonias.php'
-  : ['Andina', 'Amazónica', 'Caribe', 'Pacífico', 'Orinoquía'];
+$coloniasConfig = require __DIR__ . '/config/colonias.php';
+$coloniasNombres = array_column($coloniasConfig, 'nombre');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,7 +12,9 @@ $colonias = file_exists(__DIR__ . '/config/colonias.php')
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ruleta de Colonias Colombianas</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
   <main class="container">
@@ -48,24 +49,19 @@ $colonias = file_exists(__DIR__ . '/config/colonias.php')
     <div id="resultado" class="resultado" role="alert" aria-live="polite">
       <div id="ruletaContainer" class="ruleta-container" aria-hidden="true">
         <div class="ruleta">
-          <div id="ruletaWheel" class="ruleta-wheel" role="img" aria-label="Ruleta con las cinco colonias">
-            <?php foreach ($colonias as $c): ?>
-            <div class="segmento" data-colonia="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($c) ?></div>
+          <div id="ruletaWheel" class="ruleta-wheel" role="img" aria-label="Ruleta de colonias">
+            <?php foreach ($coloniasConfig as $col): ?>
+            <div class="segmento" data-colonia="<?= htmlspecialchars($col['nombre']) ?>"><?= htmlspecialchars($col['nombre']) ?></div>
             <?php endforeach; ?>
           </div>
           <div class="ruleta-marcador" aria-hidden="true"></div>
         </div>
         <div class="ruleta-leyenda" id="ruletaLeyenda">
-            <?php
-            $clases = ['andina', 'amazonica', 'caribe', 'pacifico', 'orinoquia'];
-            foreach ($colonias as $i => $c):
-              $clase = $clases[$i] ?? 'colonia-' . $i;
-            ?>
-          <span class="ruleta-leyenda-item <?= htmlspecialchars($clase) ?>" data-colonia="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($c) ?></span>
+            <?php foreach ($coloniasConfig as $col): ?>
+          <span class="ruleta-leyenda-item <?= htmlspecialchars($col['slug']) ?>" data-colonia="<?= htmlspecialchars($col['nombre']) ?>"><?= htmlspecialchars($col['nombre']) ?></span>
             <?php endforeach; ?>
         </div>
       </div>
-      <div id="asignacionMensaje" class="asignacion-mensaje"></div>
     </div>
 
     <footer class="footer">
@@ -73,8 +69,9 @@ $colonias = file_exists(__DIR__ . '/config/colonias.php')
     </footer>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    window.COLONIAS = <?= json_encode($colonias) ?>;
+    window.COLONIAS = <?= json_encode($coloniasNombres) ?>;
   </script>
   <script src="app.js"></script>
 </body>

@@ -14,7 +14,8 @@ if (!file_exists($configPath)) {
 require_once $configPath;
 require_once __DIR__ . '/../config/validacion.php';
 
-$COLONIAS = require __DIR__ . '/../config/colonias.php';
+$coloniasConfig = require __DIR__ . '/../config/colonias.php';
+$COLONIAS = array_column($coloniasConfig, 'nombre');
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
