@@ -6,14 +6,13 @@ DirectoryIndex index.php
   RewriteRule ^favicon\.ico$ favicon.svg [L]
 </IfModule>
 
-# Detectar HTTPS cuando NGINX/proxy pasa X-Forwarded-Proto (evita bucle de redirección)
-SetEnvIf X-Forwarded-Proto "https" HTTPS=on
-
 # Redirección HTTPS en producción (solo si la petición original era HTTP)
+# Usa X-Forwarded-Proto para evitar bucle cuando hay proxy (NGINX) delante
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTPS} off
   RewriteCond %{ENV:APP_ENV} production
+  RewriteCond %{HTTP:X-Forwarded-Proto} !^https
+  RewriteCond %{HTTPS} off
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
