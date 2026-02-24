@@ -1,0 +1,4 @@
+# Denegar acceso directo a archivos de datos
+<FilesMatch "\.(json|sql)$">
+  Require all denied
+</FilesMatch>

@@ -1,0 +1,308 @@
+/* Ruleta de Colonias Colombianas - Estilos */
+
+:root {
+  --color-andina: #2d5a27;
+  --color-amazonica: #117a65;
+  --color-caribe: #1a5276;
+  --color-pacifico: #7d3c98;
+  --color-orinoquia: #b7950b;
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-accent: #f59e0b;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+/* Fuente alternativa si DM Sans no carga */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+.container {
+  width: 100%;
+  max-width: 480px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.form-asignacion {
+  background: var(--color-surface);
+  padding: 1.75rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid #334155;
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.form-group input::placeholder {
+  color: var(--color-muted);
+  opacity: 0.8;
+}
+
+.input-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  margin-top: 0.375rem;
+}
+
+.btn-asignar {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #1e293b;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-asignar:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.btn-asignar:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-asignar .btn-loading {
+  display: none;
+}
+
+.btn-asignar.loading .btn-text {
+  display: none;
+}
+
+.btn-asignar.loading .btn-loading {
+  display: inline;
+}
+
+/* Ruleta visual */
+.resultado {
+  min-height: 120px;
+}
+
+.ruleta-container {
+  display: none;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.ruleta-container.visible {
+  display: block;
+}
+
+/* Oculta la ruleta circular cuando ya tenía colonia asignada */
+.ruleta-container.solo-leyenda .ruleta {
+  display: none;
+}
+
+.ruleta-container.solo-leyenda .ruleta-leyenda {
+  margin-top: 0;
+}
+
+.ruleta {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 1.25rem;
+}
+
+.ruleta-wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 4px var(--color-accent), var(--shadow);
+  transition: transform 0s;
+  background: conic-gradient(
+    var(--color-andina) 0deg 72deg,
+    var(--color-amazonica) 72deg 144deg,
+    var(--color-caribe) 144deg 216deg,
+    var(--color-pacifico) 216deg 288deg,
+    var(--color-orinoquia) 288deg 360deg
+  );
+}
+
+.ruleta-wheel.spinning {
+  transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+/* Leyenda de colonias debajo de la ruleta: nombres legibles en horizontal */
+.ruleta-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ruleta-leyenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.ruleta-leyenda-item.andina { background: var(--color-andina); }
+.ruleta-leyenda-item.amazonica { background: var(--color-amazonica); }
+.ruleta-leyenda-item.caribe { background: var(--color-caribe); }
+.ruleta-leyenda-item.pacifico { background: var(--color-pacifico); }
+.ruleta-leyenda-item.orinoquia { background: var(--color-orinoquia); }
+
+.ruleta-leyenda-item.ganador {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  transform: scale(1.05);
+}
+
+/* Etiquetas en la ruleta: centradas en cada segmento de color */
+/* translateY usa % del elemento: height:100% hace que sea % del wheel. Radio ~38%. */
+.segmento {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 38%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  /* Contorno para legibilidad en fondos oscuros */
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 1),
+    0 0 5px rgba(0, 0, 0, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    1px 0 1px rgba(0, 0, 0, 1),
+    -1px 0 1px rgba(0, 0, 0, 1),
+    0 1px 1px rgba(0, 0, 0, 1),
+    0 -1px 1px rgba(0, 0, 0, 1);
+  pointer-events: none;
+}
+
+/* Centro de cada segmento en conic-gradient: 36°, 108°, 180°, 252°, 324° */
+/* translateY(-35%): más hacia el centro para quedar en el medio radial del segmento */
+.segmento:nth-child(1) { transform: translate(-50%, -50%) rotate(36deg) translateY(-35%) rotate(-36deg); }
+.segmento:nth-child(2) { transform: translate(-50%, -50%) rotate(108deg) translateY(-35%) rotate(-108deg); }
+.segmento:nth-child(3) { transform: translate(-50%, -50%) rotate(180deg) translateY(-35%) rotate(-180deg); }
+.segmento:nth-child(4) { transform: translate(-50%, -50%) rotate(252deg) translateY(-35%) rotate(-252deg); }
+.segmento:nth-child(5) { transform: translate(-50%, -50%) rotate(324deg) translateY(-35%) rotate(-324deg); }
+
+.ruleta-marcador {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 16px solid var(--color-accent);
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.asignacion-mensaje {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.asignacion-mensaje.exito {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.15);
+}
+
+.asignacion-mensaje.error {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}

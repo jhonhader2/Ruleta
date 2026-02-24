@@ -1,0 +1,11 @@
+# Credenciales y configuración sensible
+config/database.php
+
+# Datos locales (legacy JSON, backups, rate limit, etc.)
+data/*.json
+data/*.sql
+
+# Entorno
+.env
+.env.local
+.env.*.local
