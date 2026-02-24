@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.*
+*.md
+Dockerfile
+docker-compose*.yml
+.dockerignore
+config/database.php
+data/*.json
+data/*.sql

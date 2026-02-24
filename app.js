@@ -15,8 +15,10 @@ const btnAsignar = document.getElementById('btnAsignar');
 const resultado = document.getElementById('resultado');
 const ruletaContainer = document.getElementById('ruletaContainer');
 const ruletaWheel = document.getElementById('ruletaWheel');
+const btnReporte = document.getElementById('btnReporte');
 
 form.addEventListener('submit', manejarEnvio);
+btnReporte?.addEventListener('click', descargarReporte);
 
 // Solo números en documento de identidad
 inputDocumento.addEventListener('input', (e) => {
@@ -188,4 +190,25 @@ function asignarLocal(documento) {
   } catch (_) {}
 
   return { colonia, yaAsignado: false };
+}
+
+/** Descarga el reporte en CSV. */
+async function descargarReporte() {
+  if (!btnReporte) return;
+  try {
+    btnReporte.disabled = true;
+    const res = await fetch('api/reporte.php?formato=csv');
+    if (!res.ok) throw new Error('Error al generar el reporte');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `reporte-colonias-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    mostrarError(err.message || 'No se pudo descargar el reporte');
+  } finally {
+    btnReporte.disabled = false;
+  }
 }

@@ -66,6 +66,7 @@ $coloniasNombres = array_column($coloniasConfig, 'nombre');
 
     <footer class="footer">
       <p>Las colonias se asignan de forma aleatoria manteniendo equilibrio entre grupos.</p>
+      <button type="button" id="btnReporte" class="btn-reporte">Descargar reporte</button>
     </footer>
   </main>
 
