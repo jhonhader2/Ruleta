@@ -10,6 +10,9 @@
 # Primera vez: crea .env, valida variables y pide configurar si faltan.
 # Siguientes: ./deploy.sh actualiza y reinicia.
 #
+# Con NGINX: usar nginx/ruleta.dataguaviare.com.co.conf.example como plantilla.
+# Certbot para SSL: certbot --nginx -d ruleta.dataguaviare.com.co
+#
 set -e
 
 echo "=== Ruleta - Despliegue Docker ==="
@@ -44,5 +47,9 @@ echo "=== Estado ==="
 docker compose ps
 
 echo ""
-echo "Listo. Accede a http://TU_IP:${PORT:-8080}"
+if [ -n "${APP_URL}" ]; then
+  echo "Listo. Accede a ${APP_URL}"
+else
+  echo "Listo. Define APP_URL en .env para ver la URL de acceso"
+fi
 echo "Para ver logs: docker compose logs -f"
