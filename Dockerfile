@@ -12,6 +12,9 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 # Extensiones PHP para MySQL
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Evitar salida HTML de errores (API debe devolver solo JSON)
+RUN echo "display_errors = Off\ndisplay_startup_errors = Off\nlog_errors = On" > /usr/local/etc/php/conf.d/99-production.ini
+
 COPY --chown=www-data:www-data . /var/www/html/
 
 # Permisos para data (rate limit, etc.)
