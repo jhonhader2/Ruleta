@@ -18,6 +18,8 @@ $coloniasNombres = array_column($coloniasConfig, 'nombre');
 </head>
 <body>
   <main class="container">
+    <div class="layout-main">
+    <div class="content-left">
     <header class="header">
       <h1>Ruleta de Colonias Colombianas</h1>
       <p class="subtitle">Ingresa tu documento y descubre tu colonia asignada</p>
@@ -64,15 +66,36 @@ $coloniasNombres = array_column($coloniasConfig, 'nombre');
       </div>
     </div>
 
+    </div>
+    <aside class="content-right">
+    <section class="dashboard" id="dashboard">
+      <header class="dashboard-header">
+        <h2 class="dashboard-title">Resumen</h2>
+        <div class="dashboard-total" id="dashboardTotal">
+          <span class="dashboard-total-num" id="dashboardTotalNum">—</span>
+          <span class="dashboard-total-label">asignaciones</span>
+        </div>
+      </header>
+      <div class="dashboard-grid" id="dashboardGrid"></div>
+      <div class="dashboard-actions">
+        <button type="button" id="btnReporte" class="btn-reporte">
+          <svg class="btn-reporte-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar reporte
+        </button>
+      </div>
+    </section>
+    </aside>
+    </div>
+
     <footer class="footer">
       <p>Las colonias se asignan de forma aleatoria manteniendo equilibrio entre grupos.</p>
-      <button type="button" id="btnReporte" class="btn-reporte">Descargar reporte</button>
     </footer>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     window.COLONIAS = <?= json_encode($coloniasNombres) ?>;
+    window.COLONIAS_CONFIG = <?= json_encode($coloniasConfig) ?>;
   </script>
   <script src="app.js"></script>
 </body>

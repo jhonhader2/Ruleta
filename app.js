@@ -20,6 +20,8 @@ const btnReporte = document.getElementById('btnReporte');
 form.addEventListener('submit', manejarEnvio);
 btnReporte?.addEventListener('click', descargarReporte);
 
+cargarDashboard();
+
 // Solo números en documento de identidad
 inputDocumento.addEventListener('input', (e) => {
   e.target.value = e.target.value.replace(/\D/g, '');
@@ -96,6 +98,7 @@ function procesarAsignacion(colonia, yaAsignado, mensaje) {
   } else {
     animarRuleta(colonia, mensaje);
   }
+  cargarDashboard();
 }
 
 function mostrarError(mensaje) {
@@ -190,6 +193,47 @@ function asignarLocal(documento) {
   } catch (_) {}
 
   return { colonia, yaAsignado: false };
+}
+
+/** Carga y muestra el dashboard de totales. */
+async function cargarDashboard() {
+  const totalEl = document.getElementById('dashboardTotal');
+  const gridEl = document.getElementById('dashboardGrid');
+  if (!totalEl || !gridEl) return;
+
+  try {
+    const res = await fetch('api/reporte.php');
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+
+    const totalNumEl = document.getElementById('dashboardTotalNum');
+    if (totalNumEl) totalNumEl.textContent = data.total;
+
+    const maxTotal = Math.max(...Object.values(data.conteos), 1);
+    const config = window.COLONIAS_CONFIG || COLONIAS.map(n => ({ nombre: n, slug: n.toLowerCase().replace(/[^a-z0-9]/g, '') }));
+    gridEl.innerHTML = config.map(col => {
+      const total = data.conteos[col.nombre] ?? 0;
+      const slug = col.slug || col.nombre.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const pct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+      return `<div class="dashboard-card dashboard-card-${slug}">
+        <div class="dashboard-card-header">
+          <span class="dashboard-card-nombre">${escapeHtml(col.nombre)}</span>
+          <span class="dashboard-card-total">${total}</span>
+        </div>
+        <div class="dashboard-card-bar"><span class="dashboard-card-bar-fill" style="width:${pct}%"></span></div>
+      </div>`;
+    }).join('');
+  } catch {
+    const totalNumEl = document.getElementById('dashboardTotalNum');
+    if (totalNumEl) totalNumEl.textContent = '—';
+    gridEl.innerHTML = '<p class="dashboard-empty">No se pudo cargar el resumen</p>';
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 /** Descarga el reporte en CSV. */
