@@ -100,6 +100,15 @@ if (strlen($documento) < DOC_MIN_LENGTH || strlen($documento) > DOC_MAX_LENGTH) 
     responderError(400, 'Documento inválido (entre ' . DOC_MIN_LENGTH . ' y ' . DOC_MAX_LENGTH . ' dígitos)');
 }
 
+$archivoPersonas = __DIR__ . '/../data/personas.csv';
+if (file_exists($archivoPersonas)) {
+    $lineas = file($archivoPersonas, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $documentosPermitidos = array_map('trim', array_slice($lineas, 1)); // Saltar cabecera "Documento"
+    if (!in_array($documento, $documentosPermitidos, true)) {
+        responderError(404, 'El documento no se encuentra en el sistema');
+    }
+}
+
 $existente = obtenerAsignacionExistente($pdo, $documento);
 if ($existente) {
     responderYaAsignado($existente);
