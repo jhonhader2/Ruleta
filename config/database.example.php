@@ -9,6 +9,18 @@
  *   DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
  */
 
+// Cargar .env en local (Laragon, etc.) cuando no hay variables de entorno
+if (!getenv('DB_HOST') && file_exists(__DIR__ . '/../.env')) {
+    $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if ($line !== '' && strpos($line, '#') !== 0 && strpos($line, '=') !== false) {
+            [$key, $val] = explode('=', $line, 2);
+            putenv(trim($key) . '=' . trim($val, " \t\n\r\0\x0B\"'"));
+        }
+    }
+}
+
 $host = getenv('DB_HOST') ?: 'localhost';
 $port = getenv('DB_PORT') ?: '3306';
 $name = getenv('DB_NAME') ?: 'ruleta';

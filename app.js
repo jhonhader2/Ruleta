@@ -1,6 +1,6 @@
 /**
  * Ruleta de Colonias Colombianas
- * Formulario de asignación con algoritmo de balance interno (+2 máx. diferencia).
+ * Formulario de asignación con algoritmo de balance interno (+1 máx. diferencia).
  * COLONIAS: inyectado por index.php o fallback estático.
  */
 
@@ -95,10 +95,10 @@ function procesarAsignacion(colonia, yaAsignado, mensaje) {
   if (yaAsignado) {
     mostrarResultado(mensaje);
     mostrarColoniaAsignada(colonia);
+    cargarDashboard();
   } else {
     animarRuleta(colonia, mensaje);
   }
-  cargarDashboard();
 }
 
 function mostrarError(mensaje) {
@@ -148,6 +148,7 @@ function animarRuleta(coloniaGanadora, mensaje) {
   const alTerminar = () => {
     resaltarGanadorEnLeyenda(coloniaGanadora);
     mostrarResultado(mensaje);
+    cargarDashboard();
     ruletaWheel.removeEventListener('transitionend', alTerminar);
   };
   ruletaWheel.addEventListener('transitionend', alTerminar);
@@ -178,7 +179,7 @@ function asignarLocal(documento) {
   );
   if (existente) return { colonia: existente.colonia, yaAsignado: true };
 
-  const BALANCE_MAX = 2;
+  const BALANCE_MAX = 1;
   const min = Math.min(...Object.values(datos.porColonia));
   const limite = min + BALANCE_MAX;
   const elegibles = COLONIAS.filter(c => datos.porColonia[c] < limite);
